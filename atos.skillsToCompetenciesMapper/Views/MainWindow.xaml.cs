@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace atos.skillsToCompetenciesMapper
+namespace atos.skillsToCompetenciesMapper.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +23,16 @@ namespace atos.skillsToCompetenciesMapper
         public MainWindow()
         {
             InitializeComponent();
+        }
+        
+        private void TabItem_DragOver(object sender, DragEventArgs e)
+        {
+            var tabItem = e.Source as TabItem;
+
+            if (tabItem == null)
+                return;
+           // tabItem.IsSelected = true;
+            
         }
     }
 }

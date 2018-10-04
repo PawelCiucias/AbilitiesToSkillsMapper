@@ -1,0 +1,71 @@
+[
+  {
+    "category": "Programm manager",
+    "subroles": [ "Generic" ]
+  },
+  {
+    "category": "Project manager",
+    "subroles": [ "Generic", "Waterfall", "Scrum", "Hermes" ]
+  },
+  {
+    "category": "Technical team lead",
+    "subroles": [ "Generic" ]
+  },
+  {
+    "category": "Architect",
+    "subroles": [ "Java", ".net", "O365", "SharePoint" ]
+  },
+  {
+    "category": "Cloud Architect",
+    "subroles": [ "Azure", "Google", "AVS" ]
+  },
+  {
+    "category": "Business Analyst",
+    "subroles": [ "Business Analyst", "System Analyst" ]
+  },
+  {
+    "category": "UX/UI Expert",
+    "subroles": [ "Generic" ]
+  },
+  {
+    "category": "Data Analyst/Scientist",
+    "subroles": [ "Data Architect", "Microsoft", "Google", "Oracle" ]
+  },
+  {
+    "category": "Frontend Developer",
+    "subroles": [ "Generic" ]
+  },
+  {
+    "category": "Backend Developer",
+    "subroles": [ "Java", ".net", "O365", "SharePoint" ]
+  },
+  {
+    "category": "App Developer",
+    "subroles": [ "Generic" ]
+  },
+  {
+    "category": "Cloud Developer",
+    "subroles": [ "Azure", "Google", "AVS", "DevOps" ]
+  },
+  {
+    "category": "IDM Specialist",
+    "subroles": [ "Microsoft", "Dell" ]
+  },
+  {
+    "category": "Coaching",
+    "subroles": [ "Change Mgmt", "Digital Transform", "Scrum", "DevOps", "Safe", "Strategy/ Innovation" ]
+  },
+  {
+    "category": "Atos Platforms",
+    "subroles": [
+      "App Strategy & transformation",
+      "Automation & Robotics",
+      "Customer Experience Mgmt",
+      "Atos CODEX Analytics",
+      "Industry 4.0",
+      "Security & Compliance Consulting",
+      "Digital Workplace",
+      "Internet Of Things (IOT)"
+    ]
+  }
+]
