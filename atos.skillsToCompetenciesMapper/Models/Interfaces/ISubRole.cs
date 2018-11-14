@@ -7,8 +7,8 @@ namespace atos.skillsToCompetenciesMapper.Models.Interfaces
 {
     public interface ISubRole
     {
-        string Category { get; set; }
+        string Skill { get; set; }
      //   int SkillCount { get; set; }
-        ICollection<IAbility> Skills { get; set; }
+        ICollection<IAbility> Abilities { get; set; }
     }
 }

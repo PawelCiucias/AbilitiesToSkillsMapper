@@ -51,8 +51,8 @@ namespace atos.skillsToCompetenciesMapper.Models
     [DebuggerDisplay("{DebuggerDisplay()}")]
     class SubRole : BaseModel,  ISubRole
     {
-        public string Category { get; set; }
-        public ICollection<IAbility> Skills { get; set; } = new ObservableCollection<IAbility>();
+        public string Skill { get; set; }
+        public ICollection<IAbility> Abilities { get; set; } = new ObservableCollection<IAbility>();
 
         // public int SkillCount { get => Skills?.Count() ?? 0; set { } }
 
@@ -60,17 +60,17 @@ namespace atos.skillsToCompetenciesMapper.Models
 
         public SubRole(string category) : this()
         {
-            this.Category = category;
-            base.NotifyPropertyChanged(nameof(Category));
+            this.Skill = category;
+            base.NotifyPropertyChanged(nameof(Skill));
         }
 
         public SubRole(string category, IEnumerable<IAbility> skills) : this(category)
         {
             foreach (var skill in skills)
-                this.Skills.Add(skill);
+                this.Abilities.Add(skill);
            // base.NotifyPropertyChanged(nameof(SkillCount));
         }
 
-        private string DebuggerDisplay() => $"{Category} ({Skills?.Count ?? 0})";
+        private string DebuggerDisplay() => $"{Skill} ({Abilities?.Count ?? 0})";
     }
 }

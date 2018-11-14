@@ -21,9 +21,9 @@
                   dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}" >
         <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Path=Skills}">
+            <HierarchicalDataTemplate ItemsSource="{Binding Path=Abilities}">
                 <TextBlock>
-                    <Run Text="{Binding Category}" />
+                    <Run Text="{Binding Skill}" />
                     <!--<Run Text="("/>
                     <Run Text="{Binding SkillCount}"/>
                     <Run Text=")"/>-->

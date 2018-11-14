@@ -10,6 +10,10 @@ namespace atos.skillsToCompetenciesMapper.Models
     public class Ability : BaseModel, IAbility, IEquatable<IAbility>
     {
         #region Properties
+
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+
         string category;
         [JsonProperty("category")]
         public string Category { get => category; set => base.SetProperty(ref category, value); }
@@ -20,6 +24,18 @@ namespace atos.skillsToCompetenciesMapper.Models
 
         [JsonProperty("level")]
         public string Level { get; set; }
+
+        
+        private bool _active = true;
+
+        [JsonProperty("active")]
+        public bool Active
+        {
+            get => _active;
+            set => base.SetProperty(ref _active, value);
+        }
+
+
         #endregion
 
         #region Constructors
@@ -27,10 +43,15 @@ namespace atos.skillsToCompetenciesMapper.Models
 
         public Ability(string category, string line) : this()
         {
+            this.Id = Guid.NewGuid();
             this.Category = category;
             var values = line.Split(',');
             this.Name = values[0].Trim('"');
             this.Level = values[2].Trim('"');
+        }
+
+        public Ability(IAbility ability) {
+
         }
         #endregion
 
@@ -43,6 +64,7 @@ namespace atos.skillsToCompetenciesMapper.Models
 
         public object Clone() => new Ability
         {
+            Id = Guid.NewGuid(),
             Category = this.Category,
             Name = this.Name,
             Level = this.Level

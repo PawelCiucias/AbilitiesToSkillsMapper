@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace atos.skillsToCompetenciesMapper.Helpers
 {
 
-    class ExcelHelper : IDisposable
+    class ExcelHelper
     {
         static Color lightGreen = Color.FromArgb(226, 239, 218);
         static Color green = Color.FromArgb(198, 224, 180);
@@ -62,7 +62,7 @@ namespace atos.skillsToCompetenciesMapper.Helpers
 
         public ExcelHelper() { }
 
-        public ExcelHelper(IEnumerable<IRole> roles, IList<IEmployee> employees, IDictionary<string, string> abilityToSkillMap)
+        public ExcelHelper(IEnumerable<IRole> roles, IList<IEmployee> employees, IDictionary<string, IList<string>> map)
         {
             app = new Application();
             app.Visible = true;
@@ -71,10 +71,10 @@ namespace atos.skillsToCompetenciesMapper.Helpers
             wb = app.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
             ws = wb.Worksheets[1];
             ws.Name = "Skill Matrix";
-            
+
             CreateTitle();
             createInstructions();
-            
+
             var index = 0;
             var column = CreateEmployeeHeaders("A");
 
@@ -83,15 +83,16 @@ namespace atos.skillsToCompetenciesMapper.Helpers
 
             ws.Rows[5].RowHeight = 70;
             ws.Rows[6].RowHeight = 55;
-   
+
             var row = 7;
             foreach (var employee in employees)
-                CreateEmployee(employee, row++, abilityToSkillMap);
+                CreateEmployee(employee, row++, map);
 
-            FillInColumn(7, row-1);
+            FillInColumn(7, row - 1);
         }
 
-        private void FillInColumn(int startRow, int endRow) {
+        private void FillInColumn(int startRow, int endRow)
+        {
             double plainColor = ws.Range["A1"].Interior.Color;
             double fillColor = ws.Range["A6"].Interior.Color;
             var column = "A";
@@ -102,16 +103,17 @@ namespace atos.skillsToCompetenciesMapper.Helpers
                 ws.Range[range].Cells.Borders.Weight = XlBorderWeight.xlThin;
                 column = IncrimentColumn(column);
                 fillColor = ws.Range[$"{column}6"].Interior.Color;
-            } 
+            }
         }
 
-        private Color ToColor(double value) {
+        private Color ToColor(double value)
+        {
 
             int colorNumber = System.Convert.ToInt32(value);
             return System.Drawing.ColorTranslator.FromOle(colorNumber);
         }
 
-        private void CreateEmployee(IEmployee employee, int row, IDictionary<string, string> abilityToSkillMap)
+        private void CreateEmployee(IEmployee employee, int row, IDictionary<string, IList<string>> map)
         {
             var employeeProperties = typeof(IEmployee).GetProperties().Where(p => p.PropertyType != typeof(IList<IAbility>));
             var column = "A";
@@ -124,17 +126,14 @@ namespace atos.skillsToCompetenciesMapper.Helpers
             foreach (var ability in employee.Abilities)
             {
                 var abilityKey = $"{ability.Category}:{ability.Name}";
-                if (abilityToSkillMap.ContainsKey(abilityKey))
-                {
-                    var roleKey = abilityToSkillMap[abilityKey];
-                    if (roleToColumnMapping.ContainsKey(roleKey))
-                    {
-                        var subroleColumn = roleToColumnMapping[roleKey];
-                        ws.Range[$"{subroleColumn}{row}"].Value = GetSkillLevel((Ability)ability);
-                    }
-                }
+                if (map.ContainsKey(abilityKey))
+                    foreach (var skillKey in map[abilityKey])
+                        if (roleToColumnMapping.ContainsKey(skillKey))
+                        {
+                            var subroleColumn = roleToColumnMapping[skillKey];
+                            ws.Range[$"{subroleColumn}{row}"].Value = GetSkillLevel((Ability)ability);
+                        }
             }
-
         }
 
         private int GetSkillLevel(Ability ability)
@@ -193,9 +192,9 @@ namespace atos.skillsToCompetenciesMapper.Helpers
             foreach (var sr in role.SubRoles)
             {
                 lastColumn = nextColumn;
-                createRole(sr.Category, $"{nextColumn}6", color);
+                createRole(sr.Skill, $"{nextColumn}6", color);
                 WrapBottomInBorder($"{nextColumn}6");
-                roleToColumnMapping.Add($"{role.Category}:{sr.Category}", nextColumn);
+                roleToColumnMapping.Add($"{role.Category}:{sr.Skill}", nextColumn);
                 nextColumn = IncrimentColumn(lastColumn);
             }
 
@@ -245,7 +244,7 @@ namespace atos.skillsToCompetenciesMapper.Helpers
 
             var range = $"{column}6";
             WrapBottomInBorder(range);
-            
+
             ws.Range[range].VerticalAlignment = XlVAlign.xlVAlignTop;
             ws.Range[range].Interior.Color = lightBlue;
             ws.Range[range].Value = title;
@@ -266,12 +265,6 @@ namespace atos.skillsToCompetenciesMapper.Helpers
             ws.Range[range].Borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
             ws.Range[range].Borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
             ws.Range[range].Borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-        }
-
-
-        public void Dispose()
-        {
-            //wb.SaveAs("C:\\Temp\\SkillMatrix_V11.xlsx");
         }
     }
 }

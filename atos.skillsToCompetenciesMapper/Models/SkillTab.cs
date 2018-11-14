@@ -3,6 +3,7 @@ using atos.skillsToCompetenciesMapper.Models.Interfaces;
 using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,9 +15,12 @@ namespace atos.skillsToCompetenciesMapper.Models
     {
 
         string header = null;
+        private ICollection<ISkillTab> skillTabs;
+        private ICollection<IAbilityTab> abilityTabs;
+
         public string Header { get => header; set => base.SetProperty(ref header, value); }
 
-        public int SkillCount => Role.SubRoles.Sum(sr => sr.Skills.Count);
+        public int SkillCount => Role.SubRoles.Sum(sr => sr.Abilities.Count);
 
         public IRole Role { get; set; } = new Role();
 
@@ -27,6 +31,16 @@ namespace atos.skillsToCompetenciesMapper.Models
         public SkillTab() { }
 
         public SkillTab(IRole role) : this() => AddRole(role);
+
+        public SkillTab(IRole role, ICollection<ISkillTab> skillTabs) : this(role)
+        {
+            this.skillTabs = skillTabs;
+        }
+
+        public SkillTab(IRole role, ICollection<ISkillTab> skillTabs, ICollection<IAbilityTab> abilityTabs) : this(role, skillTabs)
+        {
+            this.abilityTabs = abilityTabs;
+        }
 
         public bool AddRole(IRole role)
         {
@@ -54,8 +68,8 @@ namespace atos.skillsToCompetenciesMapper.Models
 
             if (!(subRole == null || abilities == null))
                 foreach (var ability in abilities)
-                    if (!subRole.Skills.Contains(ability))
-                        subRole.Skills.Add(ability);
+                    if (!subRole.Abilities.Contains(ability) && ability.Active)
+                        subRole.Abilities.Add(ability);
 
             base.NotifyPropertyChanged(nameof(SkillCount));
 
@@ -71,10 +85,10 @@ namespace atos.skillsToCompetenciesMapper.Models
                 var ability = a as IAbility;
                 if (ability != null)
                 {
-                    var subrole = Role.SubRoles.FirstOrDefault(sr => sr.Skills?.Contains(ability) ?? false);
+                    var subrole = Role.SubRoles.FirstOrDefault(sr => sr.Abilities?.Contains(ability) ?? false);
 
                     if (subrole != null)
-                        subrole.Skills.Add(ability.Clone() as IAbility);
+                        subrole.Abilities.Add(ability.Clone() as IAbility);
                 }
             });
         }
@@ -87,11 +101,21 @@ namespace atos.skillsToCompetenciesMapper.Models
                 var ability = a as IAbility;
                 if (ability != null)
                 {
-                    var subrole = Role.SubRoles.FirstOrDefault(sr => sr.Skills?.Contains(ability) ?? false);
+                    
+                    var subrole = Role.SubRoles.FirstOrDefault(sr => sr.Abilities?.Contains(ability) ?? false);
+
 
                     if (subrole != null)
-                        subrole.Skills.Remove(ability);
+                        subrole.Abilities.Remove(ability);
 
+                    var result = skillTabs.SelectMany(t => t.Role.SubRoles.SelectMany(sr=> sr.Abilities.Where(s=> s.Name == ability.Name)));
+
+                    if (!result.Any())
+                    {
+                        IAbilityTab tab = abilityTabs.FirstOrDefault(t => t.Header == ability.Category) ;
+                        if(tab.Abilities.FirstOrDefault(t=> t.Name == ability.Name) == null)
+                            tab.Abilities.Add(ability);
+                    }
                 }
             });
         }

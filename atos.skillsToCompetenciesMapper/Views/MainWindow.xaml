@@ -8,12 +8,18 @@
         xmlns:a ="clr-namespace:atos.skillsToCompetenciesMapper.Models.Interfaces"
         xmlns:tabs="clr-namespace:atos.skillsToCompetenciesMapper.Views.Tabs"
         xmlns:m ="clr-namespace:atos.skillsToCompetenciesMapper.Models"
-         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        xmlns:c ="clr-namespace:atos.skillsToCompetenciesMapper.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
+
+    <Window.Resources>
+        <c:BoolToPathConverter x:Key="BoolToPathConverter" />
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -36,6 +42,9 @@
             </Button>
             <Button Command="{Binding ExpoertXLSVCommand}">
                 <Image Source="/Images/ExportXLSX.png" Height="100"/>
+            </Button>
+            <Button Command="{Binding ActiveAbilitiesCommand}">
+                <Image Source="{Binding ActiveAbilitites, Converter={StaticResource BoolToPathConverter }}" Height="100"/>
             </Button>
         </StackPanel>
 

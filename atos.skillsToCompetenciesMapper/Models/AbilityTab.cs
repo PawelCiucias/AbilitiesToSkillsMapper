@@ -23,7 +23,11 @@ namespace atos.skillsToCompetenciesMapper.Models
             set { base.SetProperty(ref header, value); }
         }
 
-        public int AbilityCount { get => Abilities?.Count ?? 0; }
+        public int AbilityCount
+        {
+            get => Abilities?.Where(a => a.Active).Count() ?? 0;
+
+        }
 
         public ICollection<IAbility> Abilities { get; set; } = new ObservableCollection<IAbility>();
 
@@ -45,10 +49,21 @@ namespace atos.skillsToCompetenciesMapper.Models
                 base.NotifyPropertyChanged(nameof(AbilityCount));
         }
 
+        public ICommand ToggleAbilityCommand
+        {
+            get => new RelayCommand(a =>
+            {
+                var ability = a as Ability;
+
+                ability.Active = !ability.Active;
+                base.NotifyPropertyChanged(nameof(AbilityCount));
+            });
+        }
+
         private string DebuggerDisplay() => $"{Header} ({Abilities?.Count ?? -1})";
 
         public static JsonConverter GetConverter() => new AbilityTabConverter();
-        
+
         private class AbilityTabConverter : JsonConverter<IAbilityTab>
         {
             public override IAbilityTab ReadJson(JsonReader reader, Type objectType, IAbilityTab existingValue, bool hasExistingValue, JsonSerializer serializer)

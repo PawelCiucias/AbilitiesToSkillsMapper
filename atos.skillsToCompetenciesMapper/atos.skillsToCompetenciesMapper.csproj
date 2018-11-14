@@ -66,6 +66,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolToColorConverter.cs" />
+    <Compile Include="Converters\BoolToPathConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Core\SkillDropArgs.cs" />
     <Compile Include="Custom\DragableTreeViewItem.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
@@ -128,6 +131,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Images\LightbulpOff.png" />
+    <Resource Include="Images\LightbulpON.png" />
     <Resource Include="icon_ppV_icon.ico" />
     <Resource Include="icon_vBg_icon.ico" />
     <Resource Include="Images\OpenMap.png" />
